@@ -1,114 +1,76 @@
 #!/usr/bin/python3
+""" Node class """
 
 
 class Node:
-    """Represents a node in a singly linked list
+    """ Node class that defines a node
     Attributes:
-        __data (int): data stored inside the node
-        __next_node (Node): next node in the linked list
+        prmData: value of the node
+        prmNextNode: next node
     """
-    def __init__(self, data, next_node=None):
-        """Initializes the node
-        Args:
-            data (int): data stored inside the node
-            next_node (Node): next node in the linked list
-        Returns:
-            None
-        """
-        self.data = data
-        self.next_node = next_node
+    __data = 0
+    __next_node = None
+
+    def __init__(self, prmData, prmNextNode=None):
+        self.data = prmData
+        self.next_node = prmNextNode
 
     @property
     def data(self):
-        """getter of __data
-        Returns:
-            data stored inside the node
-        """
         return self.__data
 
     @data.setter
-    def data(self, value):
-        """setter of __data
-        Args:
-            value (int): data stored insite the node
-        Returns:
-            None
-        """
-        if type(value) is not int:
+    def data(self, prmData):
+        if (not isinstance(prmData, int)):
             raise TypeError("data must be an integer")
-        self.__data = value
+        self.__data = prmData
 
     @property
     def next_node(self):
-        """getter of __next_node
-        Returns:
-           the next node in the linked list
-        """
         return self.__next_node
 
     @next_node.setter
-    def next_node(self, value):
-        """setter of __next_node
-        Args:
-            value (Node): next node in the linked list
-        Returns:
-            None
-        """
-        if value is not None and type(value) is not Node:
+    def next_node(self, prmNextNode=None):
+        if (prmNextNode is not None and not isinstance(prmNextNode, Node)):
             raise TypeError("next_node must be a Node object")
-        self.__next_node = value
-
-    def __str__(self):
-        """String representation of Node instance
-        Returns:
-            Formatted string representing the node
-        """
-        return str(self.__data)
+        self.__next_node = prmNextNode
+""" SinglyLinkedList class """
 
 
 class SinglyLinkedList:
-    """Represents a single linked list
-    Attributes:
-        __head (Node): head of the linked list
-    """
-    def __init__(self):
-        """Initializes the linked list
-        Returns:
-            None
-        """
-        self.__head = None
+    """ SinglyLinkedList class that defines a singly list """
+    __head = None
 
-    def sorted_insert(self, value):
-        """ inserts a new Node instance into the correct sorted position
-        Args:
-            value (int): data stored inside the new node
-        Returns:
-            None
-        """
-        new = Node(value)
-        tmp = self.__head
-        if tmp is None or tmp.data >= value:
-            if tmp:
-                new.next_node = tmp
-            self.__head = new
-            return
-        while tmp.next_node is not None:
-            if tmp.next_node.data >= value:
-                break
-            tmp = tmp.next_node
-        new.next_node = tmp.next_node
-        tmp.next_node = new
+    def __init__(self):
+        pass
 
     def __str__(self):
-        """String representation of SinglyLinkedList instance
-        Returns:
-            Formatted string representing the linked list
-        """
-        string = ""
-        tmp = self.__head
-        while tmp is not None:
-            string += str(tmp)
-            if tmp.next_node is not None:
-                string += "\n"
-            tmp = tmp.next_node
-        return string
+        head = self.__head
+        result = ""
+
+        while (head is not None):
+            result += str(head.data)
+            if (head.next_node is not None):
+                result += '\n'
+            head = head.next_node
+        return result
+
+    def sorted_insert(self, prmValue):
+        new = Node(prmValue)
+        head = self.__head
+
+        while (
+            head is not None and head.next_node is not None and
+            head.next_node.data < new.data
+        ):
+            head = head.next_node
+
+        if head is None:
+            self.__head = new
+        else:
+            new.next_node = head.next_node
+            head.next_node = new
+            if (head.data > new.data):
+                tmp = new.data
+                new.data = head.data
+                head.data = tmp
