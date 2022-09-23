@@ -1,54 +1,65 @@
 #!/usr/bin/python3
-""" matrix_mul module """
+"""Module matrix_mul
+Multiplies two matrices and returns the result.
+"""
 
 
-def matrix_mul(prmMatrixA, prmMatrixB):
-    """ matrix_mul function
-    this function multiply one matrix by a second one
-    Attributes:
-        prmMatrixA: first matrix
-        prmMatrixB: second matrix
-    """
-    if prmMatrixA is None:
-        raise TypeError("m_a should be indicate")
-    if prmMatrixB is None:
-        raise TypeError("m_b should be indicate")
-    if not isinstance(prmMatrixA, list):
+def matrix_mul(m_a, m_b):
+    """Return the matrix resulting of
+    the multiplication of m_a and m_b."""
+
+    if type(m_a) is not list:
         raise TypeError("m_a must be a list")
-    if not isinstance(prmMatrixB, list):
+    if type(m_b) is not list:
         raise TypeError("m_b must be a list")
-    if not all(isinstance(ele, list) for ele in prmMatrixA):
-        raise TypeError("m_a must be a list of lists")
-    if not all(isinstance(ele, list) for ele in prmMatrixB):
-        raise TypeError("m_b must be a list of lists")
-    if len(prmMatrixA) == 0 or len(prmMatrixA[0]) == 0:
-        raise TypeError("m_a can't be empty")
-    if len(prmMatrixB) == 0 or len(prmMatrixB[0]) == 0:
-        raise TypeError("m_b can't be empty")
 
-    columnLenA = len(prmMatrixA[0])
+    for x in m_a:
+        if type(x) is not list:
+            raise TypeError("m_a must be a list of lists")
+    for x in m_b:
+        if type(x) is not list:
+            raise TypeError("m_b must be a list of lists")
 
-    for row in range(len(prmMatrixA)):
-        if len(prmMatrixA[row]) != columnLenA:
-            raise TypeError("each row of m_a must be of the same size")
+    if m_a == [] or m_a == [[]]:
+        raise ValueError("m_a can't be empty")
+    if m_b == [] or m_b == [[]]:
+        raise ValueError("m_b can't be empty")
 
-    columnLenB = len(prmMatrixB[0])
+    for row in m_a:
+        for x in row:
+            if type(x) is not int and type(x) is not float:
+                raise TypeError("m_a should contain only integers or floats")
+    for row in m_b:
+        for x in row:
+            if type(x) is not int and type(x) is not float:
+                raise TypeError("m_b should contain only integers or floats")
 
-    for row in range(len(prmMatrixB)):
-        if len(prmMatrixB[row]) != columnLenB:
-            raise TypeError("each row of m_b must be of the same size")
+    row_len = []
+    for row in m_a:
+        row_len.append(len(row))
+    if not all(elem == row_len[0] for elem in row_len):
+            raise TypeError("each row of m_a must should be of the same size")
+    row_len = []
+    for row in m_b:
+        row_len.append(len(row))
+    if not all(elem == row_len[0] for elem in row_len):
+            raise TypeError("each row of m_b must should be of the same size")
 
-    # initialize result matrix
-    result = [
-        [0 for x in range(len(prmMatrixA[0]))] for y in range(len(prmMatrixA))
-        ]
+    a_col = 0
+    for col in m_a[0]:
+        a_col += 1
+    b_row = 0
+    for row in m_b:
+        b_row += 1
 
-    # iterate through rows of prmMatrixA
-    for i in range(len(prmMatrixA)):
-        # iterate through columns of prmMatrixB
-        for j in range(len(prmMatrixB[0])):
-            # iterate through rows of prmMatrixB
-            for k in range(len(prmMatrixB)):
-                result[i][j] += prmMatrixA[i][k] * prmMatrixB[k][j]
+    if a_col != b_row:
+        raise ValueError("m_a and m_b can't be multiplied")
+
+    result = [[0 for x in range(len(m_b[0]))] for y in range(len(m_a))]
+
+    for i in range(len(m_a)):
+        for j in range(len(m_b[0])):
+            for k in range(len(m_b)):
+                result[i][j] += m_a[i][k] * m_b[k][j]
 
     return result
