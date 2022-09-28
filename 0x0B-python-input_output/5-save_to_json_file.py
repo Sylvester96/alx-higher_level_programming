@@ -14,4 +14,4 @@ def save_to_json_file(prmObj, prmFileName):
     """
     with open(prmFileName, 'w') as file:
         json.dump(prmObj, file)
-    file.
+    file.closed
