@@ -1,20 +1,17 @@
 #!/usr/bin/python3
-"""Module 7.
-Writes an Object to a text file,
-using a JSON representation.
 """
+script to save and load
+"""
+import sys
 
+save_json = __import__('7-save_to_json_file').save_to_json_file
+load_json = __import__('8-load_from_json_file').load_from_json_file
 
-import json
-
-
-def save_to_json_file(my_obj, filename):
-    """Writes the representation of my_obj
-    to filename.
-    Args:
-        - my_obj: object to write
-        - filename: file to write into
-    """
-
-    with open(filename, 'w+') as f:
-        json.dump(my_obj, f)
+file = "add_item.json"
+try:
+    new = load_json(file)
+except (ValueError, FileNotFoundError):
+    new = []
+for args in sys.argv[1:]:
+    new.append(args)
+save_json(new, file)
